@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toni's Arena</title>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<meta name="apple-mobile-web-app-title" content="Toni's Arena">
+<meta name="application-name" content="Toni's Arena">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#09090c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#09090c; --bg2:#101015; --card:rgba(255,255,255,.035); --card2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+    --text:#f3efe6; --muted:#9a968e; --dim:#6b6862;
+    --gold:#d8b46a; --gold2:#f1d79b;
+    --win:#4fd18b; --draw:#e8c35a; --loss:#ff5d6c;
+    --serif:'Fraunces', Georgia, serif; --sans:'Inter', system-ui, sans-serif;
+    --r:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.5;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(900px 500px at 10% -10%, rgba(216,180,106,.10), transparent 60%),
+      radial-gradient(800px 600px at 110% 10%, rgba(220,5,45,.08), transparent 60%),
+      radial-gradient(900px 700px at 50% 120%, rgba(11,61,145,.12), transparent 60%);}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.05;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:clamp(18px,4vw,44px) clamp(14px,4vw,40px) 80px}
+
+  /* Header */
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .brand .crest{width:26px;height:26px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:12px;letter-spacing:0;color:var(--gold2)}
+  h1{font-family:var(--serif);font-weight:300;font-size:clamp(34px,6vw,62px);line-height:1.02;letter-spacing:-.02em;margin-top:14px}
+  h1 em{font-style:italic;font-weight:400;background:linear-gradient(100deg,var(--gold2),var(--gold) 60%,#b8873c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .meta{text-align:right;color:var(--muted);font-size:13px}
+  .meta .today{font-family:var(--serif);font-size:18px;color:var(--text)}
+  .meta .upd{display:inline-flex;align-items:center;gap:7px;margin-top:6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--win);box-shadow:0 0 10px var(--win)}
+  .dot.stale{background:var(--draw);box-shadow:0 0 10px var(--draw)}
+
+  /* Filter */
+  nav.filters{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 30px}
+  .chip{appearance:none;border:1px solid var(--line2);background:transparent;color:var(--muted);font:500 13px var(--sans);padding:9px 16px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.25s}
+  .chip:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
+  .chip .sw{width:9px;height:9px;border-radius:50%}
+  .chip.on{background:var(--text);color:#111;border-color:var(--text)}
+
+  /* Hero */
+  .hero{position:relative;border-radius:28px;padding:clamp(22px,4vw,42px);overflow:hidden;border:1px solid var(--line2);
+    background:linear-gradient(140deg,rgba(255,255,255,.07),rgba(255,255,255,.015));isolation:isolate}
+  .hero::before{content:"";position:absolute;inset:-40%;z-index:-1;background:radial-gradient(closest-side,var(--accent-glow,rgba(216,180,106,.25)),transparent 70%);transform:translate(35%,-20%)}
+  .hero::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--accent,#d8b46a),var(--accent2,#d8b46a))}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;align-items:end;margin-top:14px}
+  .hero .comp{color:var(--muted);font-size:14px;margin-bottom:8px}
+  .hero .match{font-family:var(--serif);font-size:clamp(28px,4.4vw,50px);line-height:1.05;letter-spacing:-.015em;font-weight:500}
+  .hero .match .vs{font-style:italic;font-weight:300;color:var(--muted);font-size:.6em;margin:0 .25em}
+  .hero .when{margin-top:14px;color:var(--text);font-size:15px}
+  .hero .when span{color:var(--muted)}
+  .countdown{display:flex;gap:10px;justify-content:flex-end}
+  .cd{min-width:70px;text-align:center;padding:14px 8px;border-radius:16px;background:rgba(0,0,0,.35);border:1px solid var(--line)}
+  .cd b{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(26px,3.6vw,38px);font-variant-numeric:tabular-nums;line-height:1}
+  .cd small{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .tvrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+  .tv{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid var(--line2);color:var(--text);white-space:nowrap}
+  .tv::before{content:"";width:12px;height:9px;border:1.5px solid currentColor;border-radius:2px;opacity:.7}
+  .note{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+  .tbc{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--draw);border:1px solid rgba(232,195,90,.4);padding:2px 6px;border-radius:6px;margin-left:8px;vertical-align:middle;font-style:normal}
+
+  /* Section title */
+  .h2{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:54px 0 18px}
+  .h2 h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,3vw,32px);letter-spacing:-.01em}
+  .h2 .sub{color:var(--muted);font-size:13px}
+
+  /* Agenda */
+  .agenda{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
+  .day{display:grid;grid-template-columns:120px 1fr;border-top:1px solid var(--line)}
+  .day:first-child{border-top:0}
+  .day .d{padding:18px 18px;border-right:1px solid var(--line)}
+  .day .d b{display:block;font-family:var(--serif);font-size:30px;font-weight:500;line-height:1}
+  .day .d span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+  .day .d .rel{display:block;margin-top:6px;color:var(--gold);letter-spacing:.06em;text-transform:none;font-size:12px}
+  .ev{display:grid;grid-template-columns:62px 1fr auto;gap:14px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+  .ev:first-child{border-top:0}
+  .ev .t{font-variant-numeric:tabular-nums;font-weight:600}
+  .ev .ttl{font-weight:600}
+  .ev .cmp{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .ev .tvs{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+  .pill{width:8px;height:8px;border-radius:50%;flex:none}
+
+  /* Club panels */
+  .club{margin-top:30px;border-radius:26px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));overflow:hidden;position:relative}
+  .club-head{display:flex;align-items:center;gap:18px;padding:26px clamp(18px,3vw,32px);position:relative;border-bottom:1px solid var(--line);isolation:isolate}
+  .club-head::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(600px 160px at 0% 50%,var(--glow),transparent 70%)}
+  .club-head::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2) 40%,transparent 80%)}
+  .mono{width:62px;height:62px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:.02em;
+    background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.35),transparent 45%),linear-gradient(145deg,var(--c1),var(--c2));color:#fff;box-shadow:0 10px 30px var(--glow),inset 0 0 0 2px rgba(255,255,255,.25);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+  .club-head h3{font-family:var(--serif);font-weight:500;font-size:clamp(24px,3.2vw,34px);line-height:1.05;letter-spacing:-.01em}
+  .club-head .tag{color:var(--muted);font-size:13px;font-style:italic;font-family:var(--serif)}
+  .club-body{padding:clamp(18px,3vw,32px)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .stat{padding:18px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid var(--line)}
+  .stat .l{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--serif);font-size:26px;font-weight:500;margin:6px 0 2px;line-height:1.1}
+  .stat .dt{font-size:12.5px;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:24px;margin-top:28px}
+  .blk h4{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px}
+  .blk + .blk{margin-top:26px}
+  .fx{padding:14px 0;border-top:1px solid var(--line)}
+  .fx:first-of-type{border-top:0;padding-top:2px}
+  .fx .top{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted)}
+  .fx .mt{font-weight:600;font-size:15.5px;margin:3px 0 7px}
+  .fx .tvs{display:flex;gap:5px;flex-wrap:wrap}
+  .res{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+  .res:first-of-type{border-top:0}
+  .badge{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:700;color:#0b0b0e}
+  .badge.S{background:var(--win)} .badge.U{background:var(--draw)} .badge.N{background:var(--loss)} .badge.R{background:var(--gold)}
+  .res .m{font-size:14px;font-weight:500}
+  .res .c{font-size:12px;color:var(--muted)}
+  .res .sc{font-family:var(--serif);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .tbl-title{font-size:13px;color:var(--muted);margin:0 0 8px}
+  .tbl + .tbl{margin-top:22px}
+  td{padding:8px 6px;border-top:1px solid var(--line)}
+  tr:first-child td{border-top:0}
+  td.p{width:30px;color:var(--muted);font-variant-numeric:tabular-nums}
+  td.n{font-weight:500}
+  td.v{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+  td.v:last-child{color:var(--text);font-weight:600}
+  tr.me td{background:rgba(255,255,255,.07);color:var(--text)}
+  tr.me td.p{box-shadow:inset 3px 0 0 var(--c1);color:var(--text)}
+  tr.me td.n{font-weight:700}
+  tr.me td:first-child{border-radius:8px 0 0 8px}
+  tr.me td:last-child{border-radius:0 8px 8px 0}
+  .more{appearance:none;background:none;border:0;color:var(--gold);font:500 12.5px var(--sans);cursor:pointer;margin-top:8px;padding:4px 0}
+  .news a,.news div.it{display:block;padding:12px 0;border-top:1px solid var(--line);color:var(--text);text-decoration:none}
+  .news .it:first-child{border-top:0;padding-top:2px}
+  .news .ti{font-family:var(--serif);font-size:17px;line-height:1.3}
+  .news .sr{font-size:12px;color:var(--muted);margin-top:3px}
+  .empty{color:var(--muted);font-size:14px;padding:6px 0}
+
+  footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--dim);font-size:12.5px}
+  footer b{color:var(--muted);font-weight:500}
+
+  .fade{animation:fade .6s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  @media (max-width:820px){
+    .hero-grid,.grid2{grid-template-columns:1fr}
+    .countdown{justify-content:flex-start}
+    .stats{grid-template-columns:1fr}
+    .meta{text-align:left}
+    .day{grid-template-columns:1fr}
+    .day .d{border-right:0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:10px}
+    .day .d .rel{margin:0 0 0 auto}
+    .ev{grid-template-columns:52px 1fr}
+    .ev .tvs{grid-column:2;justify-content:flex-start}
+    .cd{min-width:0;flex:1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="brand"><span class="crest">T</span>Toni's Arena</div>
+      <h1 id="greet">Hallo, <em>Toni.</em></h1>
+    </div>
+    <div class="meta">
+      <div class="today" id="today"></div>
+      <div class="upd"><span class="dot" id="dot"></span><span id="upd"></span></div>
+    </div>
+  </header>
+
+  <nav class="filters" id="filters" aria-label="Filter"></nav>
+
+  <section id="hero"></section>
+
+  <div class="h2"><h2>Die nächsten Termine</h2><span class="sub">Alle Zeiten deutsche Zeit</span></div>
+  <section class="agenda" id="agenda"></section>
+
+  <div id="clubs"></div>
+
+  <footer>
+    <div><b>Toni's Arena</b> · wird automatisch mit den neuesten Spielplänen, Ergebnissen und Tabellen aktualisiert.</div>
+    <div>Mehr Vereine &amp; Events können jederzeit dazukommen.</div>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const D = window.ARENA_DATA || {sections:[]};
+  const TZ = 'Europe/Berlin';
+  const S = D.sections;
+  const byId = Object.fromEntries(S.map(s=>[s.id,s]));
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt = (iso,o) => new Intl.DateTimeFormat('de-DE',Object.assign({timeZone:TZ},o)).format(new Date(iso));
+  const dayKey = iso => fmt(iso,{year:'numeric',month:'2-digit',day:'2-digit'});
+  const time = iso => fmt(iso,{hour:'2-digit',minute:'2-digit'});
+  const now = () => Date.now();
+  const GRACE = 2.5*3600e3; // Spiel läuft noch ~2,5 h nach Anpfiff
+  const matchTitle = f => f.title ? esc(f.title) : `${esc(f.home)} <span class="vs">vs</span> ${esc(f.away)}`;
+  const matchPlain = f => f.title ? esc(f.title) : `${esc(f.home)} – ${esc(f.away)}`;
+  const tvs = f => (f.tv||[]).map(t=>`<span class="tv">${esc(t)}</span>`).join('');
+
+  function relDay(iso){
+    const a = new Date(dayKey(iso).split('.').reverse().join('-'));
+    const b = new Date(dayKey(new Date().toISOString()).split('.').reverse().join('-'));
+    const d = Math.round((a-b)/864e5);
+    if(d===0) return 'Heute'; if(d===1) return 'Morgen'; if(d===2) return 'Übermorgen';
+    if(d>2) return `in ${d} Tagen`; return '';
+  }
+
+  // Header
+  const h = +fmt(new Date().toISOString(),{hour:'numeric',hour12:false});
+  const g = h<11?'Guten Morgen':h<17?'Hallo':h<22?'Guten Abend':'Gute Nacht';
+  document.getElementById('greet').innerHTML = `${g}, <em>${esc(D.owner||'Toni')}.</em>`;
+  document.getElementById('today').textContent = fmt(new Date().toISOString(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const age = (now()-new Date(D.updated))/3600e3;
+  document.getElementById('upd').textContent = 'Aktualisiert ' + fmt(D.updated,{weekday:'short',day:'numeric',month:'short'}) + ', ' + time(D.updated) + ' Uhr';
+  if(age>48) document.getElementById('dot').classList.add('stale');
+
+  // Filter
+  let active = 'all';
+  const filtersEl = document.getElementById('filters');
+  function renderFilters(){
+    const items = [{id:'all',name:'Alles',c:'#d8b46a'}].concat(S.map(s=>({id:s.id,name:s.name,c:s.colors.primary})));
+    filtersEl.innerHTML = items.map(i=>`<button class="chip ${active===i.id?'on':''}" data-id="${esc(i.id)}"><span class="sw" style="background:${esc(i.c)}"></span>${esc(i.name)}</button>`).join('');
+  }
+  filtersEl.addEventListener('click',e=>{
+    const b = e.target.closest('.chip'); if(!b) return;
+    const id = b.dataset.id;
+    location.hash = id==='all' ? '' : id;
+    if(id==='all') setActive('all');
+  });
+  function setActive(id){ active = byId[id] ? id : 'all'; renderAll(); }
+  window.addEventListener('hashchange',()=>setActive(location.hash.slice(1)));
+
+  const visible = () => active==='all' ? S : [byId[active]];
+
+  function upcoming(){
+    const out=[];
+    visible().forEach(s=>(s.fixtures||[]).forEach(f=>{
+      if(new Date(f.start).getTime()+GRACE > now()) out.push(Object.assign({sec:s},f));
+    }));
+    return out.sort((a,b)=>new Date(a.start)-new Date(b.start));
+  }
+
+  // Hero
+  let cdTimer;
+  function renderHero(){
+    const el = document.getElementById('hero');
+    const list = upcoming();
+    const f = list.find(x=>new Date(x.start).getTime() > now() - GRACE);
+    if(!f){ el.innerHTML = `<div class="hero"><div class="eyebrow">Als Nächstes</div><p class="empty" style="margin-top:12px">Gerade keine Termine – die nächste Aktualisierung bringt neue.</p></div>`; return; }
+    const s=f.sec;
+    el.innerHTML = `<div class="hero fade" style="--accent:${esc(s.colors.primary)};--accent2:${esc(s.colors.secondary)};--accent-glow:${esc(s.colors.glow)}">
+      <div class="eyebrow">Als Nächstes · ${esc(s.name)}</div>
+      <div class="hero-grid">
+        <div>
+          <div class="comp">${esc(f.comp)}${f.venue?' · '+esc(f.venue):''}</div>
+          <div class="match">${matchTitle(f)}</div>
+          <div class="when">${fmt(f.start,{weekday:'long',day:'numeric',month:'long'})} <span>·</span> ${time(f.start)} Uhr${f.tbc?'<span class="tbc">vorläufig</span>':''}</div>
+          <div class="tvrow">${tvs(f)}</div>
+          ${f.note?`<div class="note">${esc(f.note)}</div>`:''}
+        </div>
+        <div class="countdown" id="cd"></div>
+      </div></div>`;
+    const target = new Date(f.start).getTime();
+    clearInterval(cdTimer);
+    const tick=()=>{
+      const cd=document.getElementById('cd'); if(!cd) return;
+      let ms = target-now();
+      if(ms<=0){ cd.innerHTML = `<div class="cd" style="min-width:150px"><b style="color:var(--loss)">LIVE</b><small>läuft gerade</small></div>`; return; }
+      const d=Math.floor(ms/864e5); ms-=d*864e5; const hh=Math.floor(ms/36e5); ms-=hh*36e5; const mm=Math.floor(ms/6e4); const ss=Math.floor((ms-mm*6e4)/1e3);
+      const p=n=>String(n).padStart(2,'0');
+      cd.innerHTML = [[d,'Tage'],[p(hh),'Std'],[p(mm),'Min'],[p(ss),'Sek']].map(([v,l])=>`<div class="cd"><b>${v}</b><small>${l}</small></div>`).join('');
+    };
+    tick(); cdTimer=setInterval(tick,1000);
+  }
+
+  // Agenda
+  function renderAgenda(){
+    const el=document.getElementById('agenda');
+    const list=upcoming().slice(0,10);
+    if(!list.length){ el.innerHTML='<div class="ev"><div></div><div class="empty">Keine anstehenden Termine.</div></div>'; return; }
+    const groups={}; const order=[];
+    list.forEach(f=>{const k=dayKey(f.start); if(!groups[k]){groups[k]=[];order.push(k);} groups[k].push(f);});
+    el.innerHTML = order.map(k=>{
+      const first=groups[k][0].start;
+      return `<div class="day fade"><div class="d"><b>${fmt(first,{day:'numeric'})}</b><span>${fmt(first,{weekday:'short',month:'short'})}</span><span class="rel">${relDay(first)}</span></div><div>${
+        groups[k].map(f=>`<div class="ev"><div class="t">${time(f.start)}</div><div><div class="ttl">${matchPlain(f)}${f.tbc?'<span class="tbc">vorläufig</span>':''}</div><div class="cmp"><span class="pill" style="background:${esc(f.sec.colors.primary)}"></span>${esc(f.sec.name)} · ${esc(f.comp)}</div></div><div class="tvs">${tvs(f)}</div></div>`).join('')
+      }</div></div>`;
+    }).join('');
+  }
+
+  // Clubs
+  function tableHtml(t,sid,ti){
+    const key=sid+'-'+ti; const open = openTables.has(key);
+    const rows = open ? t.rows : t.rows.slice(0, t.preview||t.rows.length);
+    const me = t.rows.find(r=>r.me);
+    if(!open && me && !rows.includes(me)) rows.push(me);
+    return `<div class="tbl"><div class="tbl-title">${esc(t.title)}</div><table>${
+      rows.map(r=>`<tr class="${r.me?'me':''}"><td class="p">${esc(r.pos)}</td><td class="n">${esc(r.name)}</td>${(r.v||[]).map(v=>`<td class="v">${esc(v)}</td>`).join('')}</tr>`).join('')
+    }</table>${t.rows.length>(t.preview||t.rows.length)?`<button class="more" data-t="${esc(key)}">${open?'Weniger anzeigen':'Ganze Tabelle anzeigen'}</button>`:''}</div>`;
+  }
+  const openTables=new Set();
+  document.getElementById('clubs').addEventListener('click',e=>{
+    const b=e.target.closest('.more'); if(!b) return;
+    const k=b.dataset.t; openTables.has(k)?openTables.delete(k):openTables.add(k); renderClubs();
+  });
+
+  function renderClubs(){
+    const el=document.getElementById('clubs');
+    el.innerHTML = visible().map(s=>{
+      const fx=(s.fixtures||[]).filter(f=>new Date(f.start).getTime()+GRACE>now()).slice(0,4);
+      const res=(s.results||[]).slice(0,5);
+      return `<article class="club fade" id="sec-${esc(s.id)}" style="--c1:${esc(s.colors.primary)};--c2:${esc(s.colors.secondary)};--glow:${esc(s.colors.glow)}">
+        <div class="club-head"><div class="mono">${esc(s.short)}</div><div><h3>${esc(s.name)}</h3><div class="tag">${esc(s.tagline||'')}</div></div></div>
+        <div class="club-body">
+          <div class="stats">${(s.status||[]).map(x=>`<div class="stat"><div class="l">${esc(x.label)}</div><div class="v">${esc(x.value)}</div><div class="dt">${esc(x.detail)}</div></div>`).join('')}</div>
+          <div class="grid2">
+            <div>
+              <div class="blk"><h4>${s.kind==='racing'?'Nächste Sessions':'Nächste Spiele'}</h4>${
+                fx.length?fx.map(f=>`<div class="fx"><div class="top"><span>${esc(f.comp)}</span><span>${fmt(f.start,{weekday:'short',day:'numeric',month:'short'})} · ${time(f.start)} Uhr${f.tbc?'<span class="tbc">vorläufig</span>':''}</span></div><div class="mt">${matchPlain(f)}</div><div class="tvs">${tvs(f)}</div>${f.note?`<div class="note">${esc(f.note)}</div>`:''}</div>`).join(''):'<div class="empty">Keine Termine eingetragen.</div>'
+              }</div>
+              <div class="blk"><h4>${s.kind==='racing'?'Letzte Rennen':'Letzte Ergebnisse'}</h4>${
+                res.length?res.map(r=>`<div class="res"><div class="badge ${esc(r.outcome)}">${r.outcome==='R'?'🏁':esc(r.outcome)}</div><div><div class="m">${matchPlain(r)}</div><div class="c">${esc(r.comp)} · ${fmt(r.start,{day:'numeric',month:'short'})}${r.note?' · '+esc(r.note):''}</div></div><div class="sc">${esc(r.score||'')}</div></div>`).join(''):'<div class="empty">Noch keine Ergebnisse.</div>'
+              }</div>
+            </div>
+            <div>
+              <div class="blk"><h4>Tabelle</h4>${(s.tables||[]).map((t,i)=>tableHtml(t,s.id,i)).join('')||'<div class="empty">—</div>'}</div>
+              <div class="blk news"><h4>News</h4>${(s.news||[]).map(n=>{
+                const inner=`<div class="ti">${esc(n.title)}</div><div class="sr">${esc(n.source||'')}${n.date?' · '+fmt(n.date+'T12:00:00+01:00',{day:'numeric',month:'short'}):''}</div>`;
+                return n.url?`<a class="it" href="${esc(n.url)}" target="_blank" rel="noopener">${inner}</a>`:`<div class="it">${inner}</div>`;
+              }).join('')||'<div class="empty">—</div>'}</div>
+            </div>
+          </div>
+        </div></article>`;
+    }).join('');
+  }
+
+  function renderAll(){ renderFilters(); renderHero(); renderAgenda(); renderClubs(); }
+  setActive(location.hash.slice(1));
+  // Termine rücken automatisch nach
+  setInterval(()=>{ renderAgenda(); }, 60e3);
+})();
+</script>
+</body>
+</html>

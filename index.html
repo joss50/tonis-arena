@@ -177,7 +177,7 @@
   <header>
     <div>
       <div class="brand"><span class="crest">T</span>Toni's Arena</div>
-      <h1 id="greet">Hallo, <em>Toni.</em></h1>
+      <h1 id="greet">¡Hola, <em>Toni</em>! ¿Qué tal?</h1>
     </div>
     <div class="meta">
       <div class="today" id="today"></div>
@@ -226,9 +226,7 @@
   }
 
   // Header
-  const h = +fmt(new Date().toISOString(),{hour:'numeric',hour12:false});
-  const g = h<11?'Guten Morgen':h<17?'Hallo':h<22?'Guten Abend':'Gute Nacht';
-  document.getElementById('greet').innerHTML = `${g}, <em>${esc(D.owner||'Toni')}.</em>`;
+  document.getElementById('greet').innerHTML = `¡Hola, <em>${esc(D.owner||'Toni')}</em>! ¿Qué tal?`;
   document.getElementById('today').textContent = fmt(new Date().toISOString(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const age = (now()-new Date(D.updated))/3600e3;
   document.getElementById('upd').textContent = 'Aktualisiert ' + fmt(D.updated,{weekday:'short',day:'numeric',month:'short'}) + ', ' + time(D.updated) + ' Uhr';

@@ -2,7 +2,7 @@
     Diese Datei wird automatisch aktualisiert. Alle Zeiten als ISO mit Zeitzone.
     Neue Vereine / Events: einfach ein weiteres Objekt in "sections" ergänzen.  */
 window.ARENA_DATA = {
-  updated: "2026-11-11T22:30:00+01:00",
+  updated: "2026-11-19T07:00:00+01:00",
   owner: "Toni",
   sections: [
     {
@@ -63,8 +63,8 @@ window.ARENA_DATA = {
       ],
       news: [
         { title: "Harry Kane verlängert seinen Vertrag beim FC Bayern", date: "2026-11-09", source: "BBC Sport" },
-        { title: "Kimmich bringt Bayern in Mainz auf Kurs – 2:1-Auswärtssieg", date: "2026-11-07", source: "90min" },
-        { title: "Länderspielpause: Nächstes Bayern-Spiel am 20. November gegen Köln", date: "2026-11-09", source: "fcbayern.com" }
+        { title: "Alphonso Davies hat sich bei Kanada einen Muskelfaserriss zugezogen und fällt vorerst aus", date: "2026-11-16", source: "fcbayern.com" },
+        { title: "Trainer Kompany ist wieder da und soll am Freitag gegen Köln an der Seitenlinie stehen", date: "2026-11-15", source: "ran.de" }
       ]
     },
 
@@ -78,14 +78,15 @@ window.ARENA_DATA = {
       status: [
         { label: "Campeón de Liga 2026", value: "Meister! 🏆", detail: "Platz 1 Jahrestabelle · 63 Pkt" },
         { label: "Copa Sudamericana", value: "Finale", detail: "gegen Atlético Mineiro" },
-        { label: "Copa Argentina", value: "Halbfinale", detail: "gegen Banfield" }
+        { label: "Copa Argentina", value: "Finale", detail: "3:0 gegen Banfield · Finale am 2.12. gegen Platense" }
       ],
       fixtures: [
-        { start: "2026-11-14T23:00:00+01:00", comp: "Copa Argentina · Halbfinale", home: "Boca Juniors", away: "Banfield", venue: "Estadio Malvinas Argentinas, Mendoza", tv: ["TV Argentinien: TyC Sports (erwartet)"], note: "In Deutschland i. d. R. kein TV-Sender", tbc: false },
-        { start: "2026-11-21T21:00:00+01:00", comp: "Copa Sudamericana · FINALE", home: "Boca Juniors", away: "Atlético Mineiro", venue: "Neutraler Ort", tv: ["TV Argentinien: ESPN (erwartet)"], note: "Anstoßzeit von CONMEBOL noch nicht bestätigt", tbc: true },
-        { start: "2026-11-22T21:00:00+01:00", comp: "Torneo Clausura · Achtelfinale", home: "Boca Juniors", away: "Independiente Rivadavia", venue: "La Bombonera", tv: ["TV Argentinien: ESPN Premium / TNT Sports"], note: "Termin wird wegen des Sudamericana-Finales noch verlegt", tbc: true }
+        { start: "2026-11-21T23:30:00+01:00", comp: "Copa Sudamericana · FINALE", home: "Boca Juniors", away: "Atlético Mineiro", venue: "Estadio Metropolitano, Barranquilla (Kolumbien)", tv: ["TV Südamerika: ESPN / DSports", "Stream: Disney+ / DGO"], note: "Ein einziges Endspiel! 19:30 Uhr in Argentinien · in Deutschland kein TV-Sender", tbc: false },
+        { start: "2026-11-26T01:00:00+01:00", comp: "Torneo Clausura · Achtelfinale", home: "Boca Juniors", away: "Independiente Rivadavia", venue: "La Bombonera", tv: ["TV Argentinien: ESPN Premium"], note: "Offiziell bestätigt: Mi 25.11. um 21:00 Uhr Argentinien – bei uns Do 01:00 Uhr nachts · in Deutschland kein TV-Sender", tbc: false },
+        { start: "2026-12-02T23:00:00+01:00", comp: "Copa Argentina · FINALE", home: "Boca Juniors", away: "Platense", venue: "Ort noch offen (Mendoza, Santiago del Estero oder Rosario)", tv: ["TV Argentinien: wohl TyC Sports (noch offen)"], note: "Datum Mi 2.12. steht fest · Uhrzeit und Stadion noch nicht bekannt · Sieger darf 2027 in der Copa Libertadores spielen · in Deutschland kein TV-Sender", tbc: true }
       ],
       results: [
+        { start: "2026-11-14T23:00:00+01:00", comp: "Copa Argentina · Halbfinale", home: "Boca Juniors", away: "Banfield", score: "3:0", outcome: "S", note: "Tore: Ascacíbar, Villa, Lozano – Boca steht im Finale!" },
         { start: "2026-11-07T21:30:00+01:00", comp: "Torneo Clausura", home: "Boca Juniors", away: "Defensa y Justicia", score: "1:0", outcome: "S", note: "Enner Valencia in der 95. Minute – Boca ist Meister!" },
         { start: "2026-11-01T19:00:00+01:00", comp: "Superclásico", home: "Boca Juniors", away: "River Plate", score: "1:0", outcome: "S" }
       ],
@@ -112,9 +113,9 @@ window.ARENA_DATA = {
         }
       ],
       news: [
-        { title: "Boca ist Campeón de Liga 2026 – Siegtor in der Nachspielzeit gegen Defensa", date: "2026-11-07", source: "Emol / El Gráfico" },
-        { title: "Superclásico gewonnen: 1:0 gegen River in der Bombonera", date: "2026-11-01", source: "C5N" },
-        { title: "Am 21. November wartet das Finale der Copa Sudamericana", date: "2026-11-08", source: "Prensa Fútbol" }
+        { title: "Schiedsrichter fürs Sudamericana-Finale steht fest: Andrés Matonte aus Uruguay pfeift Boca gegen Mineiro", date: "2026-11-13", source: "442 Perfil / El Gráfico" },
+        { title: "3:0 gegen Banfield – Boca steht im Finale der Copa Argentina gegen Platense", date: "2026-11-14", source: "Infobae" },
+        { title: "Kapitän Paredes vor dem Sudamericana-Finale: „Wir geben alles“ – Lautaro Blanco soll bis Mittwoch fit sein", date: "2026-11-16", source: "Infobae" }
       ]
     },
 
@@ -176,7 +177,7 @@ window.ARENA_DATA = {
         }
       ],
       news: [
-        { title: "Lando Norris gewinnt verregneten GP von São Paulo", date: "2026-11-08", source: "Crash.net" },
+        { title: "Rennwoche in Las Vegas: Die Formel 1 fährt wieder nachts über den Strip", date: "2026-11-17", source: "formula1.com" },
         { title: "Mercedes ist Konstrukteurs-Weltmeister 2026", date: "2026-11-08", source: "RacingNews365" },
         { title: "Las Vegas live im Free-TV bei RTL", date: "2026-11-10", source: "DSLWEB" }
       ]
